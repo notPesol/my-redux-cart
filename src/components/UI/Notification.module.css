@@ -1,0 +1,17 @@
+.notification {
+  color: white;
+  background-color: blue;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  box-shadow: 0 0px 4px 4px rgba(0, 0, 0, 0.3);
+}
+
+.success {
+  background-color: green;
+}
+
+.error {
+  background-color: brown;
+}

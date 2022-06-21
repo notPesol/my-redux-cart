@@ -1,0 +1,17 @@
+.cart-button {
+  background-color: #efd09e;
+  font-size: 20px;
+  padding: 5px 20px;
+  border-radius: 10px;
+}
+
+.cart-button span {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 1px 10px;
+  border-radius: 10px;
+}
+
+.cart-button:hover {
+  transform: scale(1.025);
+}

@@ -1,57 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartData, sendCartData } from "./store/cart/cart_actions";
+
+import Notification from "./components/UI/Notification";
+import Header from "./components/Header/Header";
+import Main from "./components/Main/Main";
+import Cart from "./components/Cart/Cart";
+import Products from "./components/Product/Products";
+import { uiActions } from "./store/ui/ui_slice";
 
 function App() {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+  const showCart = useSelector((state) => state.ui.showCart);
+  const notification = useSelector((state) => state.ui.notification);
+
+  const hideNotificationHandler = useCallback(() => {
+    dispatch(uiActions.hideNotification());
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log('in first effect');
+    dispatch(fetchCartData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!cart.canSend) {
+      return;
+    }
+
+    dispatch(
+      sendCartData({
+        items: cart.items,
+        totalPrice: cart.totalPrice,
+        totalQuantity: cart.totalQuantity,
+      })
+    );
+  }, [dispatch, cart]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <React.Fragment>
+      {notification && (
+        <Notification
+          onClick={hideNotificationHandler}
+          status={notification.status}
+          title={notification.title}
+          message={notification.message}
+        />
+      )}
+      <Header />
+      <Main>
+        {showCart && <Cart />}
+        <Products />
+      </Main>
+    </React.Fragment>
   );
 }
 
